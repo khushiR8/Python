@@ -1,27 +1,32 @@
 
-s_id=[]
-s_mark=[]
-
-for i in range(1,6):
-    s_id_n = int(input('enter sidn in the range 701-799 :'))
-    if (s_id_n >= 701) and (s_id_n <= 799):
-        print(f'correct sidn :{s_id_n}')
-    else:
-        print(f'incorrect sidn:{s_id_n}')
-    s_id.append(s_id_n)
-
-print(s_id)            
-
-for j in range(1,6):
-    mark=int(input('enter mark of student'))
-    if (mark >= 0) and (mark <= 100):
-        print(f'correct mark:{mark}')
-    else:
-        print(f'incorrect mark:{mark}')
-    s_mark.append(mark)
-
-s_mark.sort()
-print(s_mark)
-print(f'lowest mark :{s_mark[0]}')
-print(f'highest mark :{s_mark[-1]}')
     
+list_id=[]
+list_marks=[]    
+num=int(input('enter number of students:'))
+for i in range(num):
+    id=int(input('enter id of students:'))
+    while (id < 700 or id > 799):
+       id=int(input('enter id of students:'))
+    marks = float(input('enter marks of students :'))
+    while (marks<0 or marks>100):
+        marks=float(input('enter marks of students :'))
+    list_id.append(id)
+    list_marks.append(marks)
+    
+index_of_min = 0
+index_of_max = 0
+min=list_marks[0]
+max=list_marks[0]
+
+for i in range (len(list_marks)):
+    if list_marks[i] < min :
+      min=list_marks[i]  
+      index_of_min=i     
+        
+    if list_marks[i]>max :
+       max=list_marks[i]   
+       index_of_max=i
+       
+print('student with id '+ str(list_id[index_of_min]) +'scored min marks of '+ str(min))   
+print('student with id '+ str(list_id[index_of_max]) +'scored max marks of '+ str(max))    
+       
