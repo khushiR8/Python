@@ -1,5 +1,3 @@
-
-    
 list_id=[]
 list_marks=[]    
 num=int(input('enter number of students:'))
@@ -8,7 +6,7 @@ for i in range(num):
     while (id < 700 or id > 799):
        id=int(input('enter id of students:'))
     marks = float(input('enter marks of students :'))
-    while (marks<0 or marks>100):
+    while (marks < 0 or marks > 100):
         marks=float(input('enter marks of students :'))
     list_id.append(id)
     list_marks.append(marks)
