@@ -8,7 +8,4 @@ for row in range(0, numberOfRows):
         value = eval(input("Enter an element and press Enter: "))
         matrix[row].append(value)
 
-print("[")
-for row in matrix:
-    print(f"  {row},")
-print("]")
+print(matrix,'\t',end='')

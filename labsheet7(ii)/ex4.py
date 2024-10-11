@@ -1,11 +1,9 @@
-num_Rows = int(input('Enter number of rows: '))
-num_Columns = int(input('Enter number of columns:'))
-my2dList = []
-for i in range(num_Rows):
-    cols = []
-    for j in range(num_Columns):
-        data = input('Enter Data: ')
-        cols.append(data)
-    my2dList.append(cols)
+list=[]
+
+for i in range(5):
+    n=int(input('enter numbers :'))
+    list.append(n)
+print(f'list before :{list}')    
+list.reverse()
+print(f'list after :{list}')
     
-print(my2dList)
