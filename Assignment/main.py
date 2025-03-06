@@ -167,7 +167,6 @@ def load_data():
     except FileNotFoundError:
         pass
 
-
 def save_data():
     with open("cars.txt", "w") as f:
         for car in cars:
@@ -177,9 +176,7 @@ def save_data():
         for customer in customers:
             f.write(f"{customer.name},{customer.number},{customer.customer_id}\n")
 
-
-# Helper functions for car and customer managemenT
-
+# Helper functions for car and customer management
 def add_car():
     car_id = input("Enter car ID: ").strip()
     # Validate car ID format (e.g., C followed by 3 digits)
@@ -203,11 +200,7 @@ def add_car():
     except ValueError:
          print("Error: Car year must be an integer.")
          return
-
-
-
-
-
+     
     color = input("Enter the car color: ").strip()
     if not color or any(char.isdigit() for char in color):
         print("Error: Car color cannot be empty or contain digits.")
@@ -224,8 +217,6 @@ def add_car():
         print("Car added successfully!")
     except ValueError as e:
         print(f"Error: {e}")
-
-
 
 def remove_car():
     list_cars()
@@ -290,7 +281,7 @@ def remove_customer():
 
 def rent_car():
     list_cars()
-    print("*******************************************************************************************************")
+    print("****************************************************")
     list_customers()
     car_id = input("Enter the car ID of the car to rent : ").strip()
 
