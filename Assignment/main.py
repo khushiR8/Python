@@ -38,6 +38,10 @@ class Vehicle:
 
     @year.setter
     def year(self, year):
+        current_year = datetime.datetime.now().year
+        if year > current_year:
+            print(f"Error: Year cannot be in the future. Current year is {current_year}.")
+            return  # Simply return without setting the value
         self._year = year
 
     # Getter and Setter for color
@@ -174,9 +178,10 @@ def save_data():
             f.write(f"{customer.name},{customer.number},{customer.customer_id}\n")
 
 
-# Helper functions for car and customer management
+# Helper functions for car and customer managemenT
+
 def add_car():
-    car_id = input("Enter car ID : ").strip()
+    car_id = input("Enter car ID: ").strip()
     # Validate car ID format (e.g., C followed by 3 digits)
     if not (len(car_id) == 4 and car_id[0] == "C" and car_id[1:].isdigit()):
         print("Error: Car ID must be in the format C followed by 3 digits (e.g., C001).")
@@ -187,28 +192,39 @@ def add_car():
         print("Error: Car ID already exists.")
         return
 
-    model = input("Enter the car model : ").strip()
+    model = input("Enter the car model: ").strip()
 
     try:
-        year = int(input("Enter the car year :"))
+        year = int(input("Enter the car year: "))
+        current_year = datetime.datetime.now().year
+        if year > current_year:
+            print(f"Error: Year cannot be in the future. Current year is {current_year}.")
+            return
     except ValueError:
-        print("Error: Car year must be an integer.")
-        return
+         print("Error: Car year must be an integer.")
+         return
 
-    color = input("Enter the car color : ").strip()
+
+
+
+
+    color = input("Enter the car color: ").strip()
     if not color or any(char.isdigit() for char in color):
         print("Error: Car color cannot be empty or contain digits.")
         return
 
     try:
-        daily_rate = float(input("Enter daily rental price : "))
+        daily_rate = float(input("Enter daily rental price: "))
     except ValueError:
         print("Error: Daily rental price must be a valid number.")
         return
 
-    cars.append(Car(car_id, model, year, color, daily_rate))
-    print("Car added successfully!")
-    print()
+    try:
+        cars.append(Car(car_id, model, year, color, daily_rate))
+        print("Car added successfully!")
+    except ValueError as e:
+        print(f"Error: {e}")
+
 
 
 def remove_car():
@@ -303,12 +319,18 @@ def rent_car():
 
                 total_cost = days * car.daily_rate
                 rental_date = datetime.date.today()
+                return_date = rental_date + datetime.timedelta(days=days)  # Calculate final return date
+
                 car.is_rented = True
                 customer.rented_car = car
-                print(f"{customer.name} has rented {car.model} for {days} days. Total cost: Rs{total_cost}")
+                print(f"{customer.name} has rented {car.model} for {days} days.")
+                print(f"Total cost: Rs{total_cost}")
+                print(f"Rental Date: {rental_date.strftime('%d/%m/%Y')}")
+                print(f"Return Date: {return_date.strftime('%d/%m/%Y')}")
 
+                # Save to rental history file
                 with open("rental_history.txt", "a") as f:
-                    f.write(f"{customer.name},{car.model},{car.year},{rental_date},-,{days},Rs{total_cost}\n")
+                    f.write(f"{customer.name},{car.model},{car.year},{rental_date},{return_date},{days},Rs{total_cost}\n")
             else:
                 print("Customer not found. Please add the customer first.")
         else:
@@ -412,5 +434,5 @@ def main():
             print("Invalid choice, please try again.")
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+main()
