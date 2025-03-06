@@ -317,7 +317,7 @@ def rent_car():
                 print(f"{customer.name} has rented {car.model} for {days} days.")
                 print(f"Total cost: Rs{total_cost}")
                 print(f"Rental Date: {rental_date.strftime('%d/%m/%Y')}")
-                print(f"Return Date: {return_date.strftime('%d/%m/%Y')}")
+                print(f"Expected Return Date: {return_date.strftime('%d/%m/%Y')}")
 
                 # Save to rental history file
                 with open("rental_history.txt", "a") as f:
