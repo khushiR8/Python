@@ -205,261 +205,258 @@ class Rental:
         return f"{self._customer.name} rented {self._car.model} on {self._rental_date.strftime('%d/%m/%Y')} and returned on {self._return_date.strftime('%d/%m/%Y')}. Total Cost: Rs{self._total_cost}"
 
 
-# Helper functions for file operations
-def load_data():
-    global cars, customers
-    try:
-        with open("cars.txt", "r") as f:
-            for line in f:
-                car_id, model, year, color, daily_rate, rented = line.strip().split(",")
-                cars.append(Car(car_id, model, int(year), color, float(daily_rate), rented == "True"))
-    except FileNotFoundError:
-        pass
+class CarRentalSystem:
+    def load_data():
+        global cars, customers
+        try:
+            with open("cars.txt", "r") as f:
+                for line in f:
+                    car_id, model, year, color, daily_rate, rented = line.strip().split(",")
+                    cars.append(Car(car_id, model, int(year), color, float(daily_rate), rented == "True"))
+        except FileNotFoundError:
+            pass
+            #print("Error: cars.txt file not found.")
+        
+        try:
+            with open("customers.txt", "r") as f:
+                for line in f:
+                    name, number, customer_id = line.strip().split(",")
+                    customers.append(Customer(name, number, customer_id))
+        except FileNotFoundError:
+            pass
+           
+    def save_data():
+        with open("cars.txt", "w") as f:
+            for car in cars:
+                f.write(f"{car.car_id},{car.model},{car.year},{car.color},{car.daily_rate},{car.is_rented}\n")
 
-    try:
-        with open("customers.txt", "r") as f:
-            for line in f:
-                name, number, customer_id = line.strip().split(",")
-                customers.append(Customer(name, number, customer_id))
-    except FileNotFoundError:
-        pass
+        with open("customers.txt", "w") as f:
+            for customer in customers:
+                f.write(f"{customer.name},{customer.number},{customer.customer_id}\n")
 
-def save_data():
-    with open("cars.txt", "w") as f:
-        for car in cars:
-            f.write(f"{car.car_id},{car.model},{car.year},{car.color},{car.daily_rate},{car.is_rented}\n")
+    def add_car():
+        print()
+        while True:
+            car_id = input("Enter car ID: ").strip()
+            if len(car_id) == 4 and car_id[0] == "V" and car_id[1:].isdigit():
+                if not any(c.car_id == car_id for c in cars):
+                    break
+                print("Error: Car ID already exists.")
+            else:
+                print("Error: Car ID must be in the format V followed by 3 digits (e.g., V001).")
 
-    with open("customers.txt", "w") as f:
-        for customer in customers:
-            f.write(f"{customer.name},{customer.number},{customer.customer_id}\n")
+        model = input("Enter the car model: ").strip()
 
-# Helper functions for car and customer management
-def add_car():
-    print()
-    car_id = input("Enter car ID: ").strip()
-    # Validate car ID format (e.g., C followed by 3 digits)
-    if not (len(car_id) == 4 and car_id[0] == "C" and car_id[1:].isdigit()):
-        print("Error: Car ID must be in the format C followed by 3 digits (e.g., C001).")
-        return
+        while True:
+            try:
+                year = int(input("Enter the car year: "))
+                current_year = datetime.datetime.now().year
+                if year <= current_year:
+                    break
+                print(f"Error: Year cannot be in the future. Current year is {current_year}.")
+            except ValueError:
+                print("Error: Car year must be an integer.")
 
-    # Check if car ID already exists
-    if any(c.car_id == car_id for c in cars):
-        print("Error: Car ID already exists.")
-        return
+        while True:
+            color = input("Enter the car color: ").strip()
+            if color and not any(char.isdigit() for char in color):
+                break
+            print("Error: Car color cannot be empty or contain digits.")
 
-    model = input("Enter the car model: ").strip()
+        while True:
+            try:
+                daily_rate = float(input("Enter daily rental price: "))
+                break
+            except ValueError:
+                print("Error: Daily rental price must be a valid number.")
 
-    try:
-        year = int(input("Enter the car year: "))
-        current_year = datetime.datetime.now().year
-        if year > current_year:
-            print(f"Error: Year cannot be in the future. Current year is {current_year}.")
-            return
-    except ValueError:
-         print("Error: Car year must be an integer.")
-         return
-     
-    color = input("Enter the car color: ").strip()
-    if not color or any(char.isdigit() for char in color):
-        print("Error: Car color cannot be empty or contain digits.")
-        return
-
-    try:
-        daily_rate = float(input("Enter daily rental price: "))
-    except ValueError:
-        print("Error: Daily rental price must be a valid number.")
-        return
-
-    try:
         cars.append(Car(car_id, model, year, color, daily_rate))
         print("Car added successfully!")
-    except ValueError as e:
-        print(f"Error: {e}")
 
-def remove_car():
-    print()
-    list_cars()
-    car_id = input("Enter the car ID of the car to remove : ").strip()
+    def remove_car():
+        print()
+        CarRentalSystem.list_cars()
+        car_id = input("Enter the car ID of the car to remove : ").strip()
 
-    # Validate car ID format
-    if not (len(car_id) == 4 and car_id[0] == "C" and car_id[1:].isdigit()):
-        print("Error: Car ID must be in the format C followed by 3 digits (e.g., C001).")
-        return
+        # Validate car ID format
+        if not (len(car_id) == 4 and car_id[0] == "V" and car_id[1:].isdigit()):
+            print("Error: Car ID must be in the format V followed by 3 digits (e.g., V001).")
+            return
 
-    car = next((c for c in cars if c.car_id == car_id), None)
-    if car:
-        cars.remove(car)
-        print(f"Car {car.model} removed successfully!")
-    else:
-        print("Car not found.")
-
-
-def add_customer():
-    print()
-    customer_id = input("Enter customer ID : ").strip()
-    # Validate customer ID format (e.g., C followed by 3 digits)
-    if not (len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit()):
-        print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001).")
-        return
-
-    # Check if customer ID already exists
-    if any(c.customer_id == customer_id for c in customers):
-        print("Error: Customer ID already exists.")
-        return
-    
-    name = input("Enter customer name : ").strip()
-    if not name or any(char.isdigit() for char in name):
-        print("Error: Customer name cannot be empty or contain digits.")
-        return
-
-    number = input("Enter customer number : ").strip()
-    # Validate that the number is exactly 8 digits and contains only digits
-    if not number.isdigit() or len(number) != 8:
-        print("Error: Customer number must be exactly 8 digits.")
-        return
-
-    customers.append(Customer(name, number, customer_id))
-    print("Customer added successfully!")
-
-
-def remove_customer():
-    print()
-    list_customers()
-    customer_id = input("Enter the customer ID of the customer to remove : ").strip()
-
-    # Validate customer ID format
-    if not (len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit()):
-        print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001).")
-        return
-
-    customer = next((c for c in customers if c.customer_id == customer_id), None)
-    if customer:
-        customers.remove(customer)
-        print(f"Customer {customer.name} removed successfully!")
-    else:
-        print("Customer not found.")
-
-
-def rent_car():
-    print()
-    list_cars()
-    print("----------------------------------------------------------------------")
-    list_customers()
-    car_id = input("Enter the car ID of the car to rent : ").strip()
-
-    # Validate car ID format
-    if not (len(car_id) == 4 and car_id[0] == "C" and car_id[1:].isdigit()):
-        print("Error: Car ID must be in the format C followed by 3 digits (e.g., C001).")
-        return
-
-    car = next((c for c in cars if c.car_id == car_id), None)
-    if car:
-        if not car.is_rented:
-            customer_id = input("Enter your customer ID : ").strip()
-
-            # Validate customer ID format
-            if not (len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit()):
-                print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001).")
-                return
-
-            customer = next((c for c in customers if c.customer_id == customer_id), None)
-            if customer:
-                try:
-                    days = int(input("Enter number of days to rent : "))
-                except ValueError:
-                    print("Error: Number of days must be an integer.")
-                    return
-
-                total_cost = days * car.daily_rate
-                rental_date = datetime.date.today()
-                return_date = rental_date + datetime.timedelta(days=days)  # Calculate final return date
-
-                car.is_rented = True
-                customer.rented_car = car
-
-                # Save to rental history file
-                with open("rental_history.txt", "a") as f:
-                    f.write(f"{customer.name},{car.model},{car.year},{rental_date},{return_date},{days},Rs{total_cost}\n")
-
-                print()
-                print(f"{customer.name} has rented {car.model} for {days} days.")
-                print(f"Total cost: Rs{total_cost}")
-                print(f"Rental Date: {rental_date.strftime('%d/%m/%Y')}")
-                print(f"Expected Return Date: {return_date.strftime('%d/%m/%Y')}")
-            else:
-                print("Customer not found. Please add the customer first.")
+        car = next((c for c in cars if c.car_id == car_id), None)
+        if car:
+            cars.remove(car)
+            print(f"Car {car.model} removed successfully!")
         else:
-            print("Car is already rented.")
-    else:
-        print("Car not found.")
+            print("Car not found.")
 
+    def add_customer():
+        print()
+        while True:
+            customer_id = input("Enter customer ID: ").strip()
+            if len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit():
+                if not any(c.customer_id == customer_id for c in customers):
+                    break
+                print("Error: Customer ID already exists.")
+            else:
+                print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001).")
 
-def return_car():
-    print()
-    list_customers()
-    customer_id = input("Enter your customer ID : ").strip()
+        while True:
+            name = input("Enter customer name: ").strip()
+            if name and not any(char.isdigit() for char in name):
+                break
+            print("Error: Customer name cannot be empty or contain digits.")
 
-    # Validate customer ID format
-    if not (len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit()):
-        print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001).")
-        return
+        while True:
+            number = input("Enter customer number: ").strip()
+            if number.isdigit() and len(number) == 8:
+                break
+            print("Error: Customer number must be exactly 8 digits.")
 
-    customer = next((c for c in customers if c.customer_id == customer_id), None)
-    if customer and customer.rented_car:
-        car = customer.rented_car
-        return_date = datetime.date.today()
-        car.is_rented = False
-        print(f"{customer.name} has returned {car.model}.")
-        customer.rented_car = None
+        customers.append(Customer(name, number, customer_id))
+        print("Customer added successfully!")
 
-        # Update the rental history with the return date
-        with open("rental_history.txt", "r") as f:
-            lines = f.readlines()
-        with open("rental_history.txt", "w") as f:
-            for line in lines:
-                if f"{customer.name},{car.model},{car.year},-" in line:
-                    f.write(line.replace("-,", f"{return_date},"))
+    def remove_customer():
+        print()
+        CarRentalSystem.list_customers()
+        customer_id = input("Enter the customer ID of the customer to remove : ").strip()
+
+        # Validate customer ID format
+        if not (len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit()):
+            print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001).")
+            return
+
+        customer = next((c for c in customers if c.customer_id == customer_id), None)
+        if customer:
+            customers.remove(customer)
+            print(f"Customer {customer.name} removed successfully!")
+        else:
+            print("Customer not found.")
+
+    def rent_car():
+        print()
+        CarRentalSystem.list_cars()
+        print("----------------------------------------------------------------------")
+        CarRentalSystem.list_customers()
+    
+        while True:
+            car_id = input("Enter the car ID of the car to rent : ").strip()
+            if len(car_id) == 4 and car_id[0] == "V" and car_id[1:].isdigit():
+                break
+            print("Error: Car ID must be in the format V followed by 3 digits (e.g., V001).")
+    
+        car = next((c for c in cars if c.car_id == car_id), None)
+        if car:
+            if not car.is_rented:
+                while True:
+                    customer_id = input("Enter your customer ID : ").strip()
+                    if len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit():
+                        break
+                    print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001).")
+            
+                customer = next((c for c in customers if c.customer_id == customer_id), None)
+                if customer:
+                    while True:
+                        try:
+                            days = int(input("Enter number of days to rent : "))
+                            if days > 0:
+                                 break
+                            print("Error: Number of days must be a positive integer.")
+                        except ValueError:
+                            print("Error: Number of days must be an integer.")
+                
+                    total_cost = days * car.daily_rate
+                    rental_date = datetime.date.today()
+                    return_date = rental_date + datetime.timedelta(days=days)  # Calculate final return date
+
+                    car.is_rented = True
+                    customer.rented_car = car
+
+                    # Save to rental history file
+                    with open("rental_history.txt", "a") as f:
+                        f.write(f"{customer.name},{car.model},{car.year},{rental_date},{return_date},{days},Rs{total_cost}\n")
+
+                    print()
+                    print(f"{customer.name} has rented {car.model} for {days} days.")
+                    print(f"Total cost: Rs{total_cost}")
+                    print(f"Rental Date: {rental_date.strftime('%d/%m/%Y')}")
+                    print(f"Expected Return Date: {return_date.strftime('%d/%m/%Y')}")
                 else:
-                    f.write(line)
-    else:
-        print("No car to return or customer not found.")
+                    print("Customer not found. Please add the customer first.")
+            else:
+                print("Car is already rented.")
+        else:
+            print("Car not found.")
+    
+            
 
+    def return_car():
+        print()
+        CarRentalSystem.list_customers()
+        customer_id = input("Enter your customer ID : ").strip()
 
-def view_rental_history():
-    try:
-        with open("rental_history.txt", "r") as f:
-            print("Rental History:")
-            for line in f:
-                customer_name, car_model, car_year, rental_date, return_date, days, total_cost = line.strip().split(",")
-                rental = Rental(
-                    customer=next((c for c in customers if c.name == customer_name), None),
-                    car=next((c for c in cars if c.model == car_model and c.year == int(car_year)), None),
-                    rental_date=datetime.datetime.strptime(rental_date, "%Y-%m-%d").date(),
-                    return_date=datetime.datetime.strptime(return_date, "%Y-%m-%d").date(),
-                    total_cost=float(total_cost.replace("Rs", ""))
-                )
-                print(rental)
-    except FileNotFoundError:
-        print("No rental history found.")
+        # Validate customer ID format
+        if not (len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit()):
+            print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001).")
+            return
 
+        customer = next((c for c in customers if c.customer_id == customer_id), None)
+        if customer and customer.rented_car:
+            car = customer.rented_car
+            return_date = datetime.date.today()
+            car.is_rented = False
+            print(f"{customer.name} has returned {car.model}.")
+            customer.rented_car = None
 
-def list_cars():
-    print()
-    print("Available Cars:")
-    for car in cars:
-        print(car)
+            # Update the rental history with the return date
+            with open("rental_history.txt", "r") as f:
+                lines = f.readlines()
+            with open("rental_history.txt", "w") as f:
+                for line in lines:
+                    if f"{customer.name},{car.model},{car.year},-" in line:
+                        f.write(line.replace("-,", f"{return_date},"))
+                    else:
+                        f.write(line)
+        else:
+            print("No car to return or customer not found.")
 
+    def view_rental_history():
+        try:
+            with open("rental_history.txt", "r") as f:
+                print("Rental History:")
+                for line in f:
+                    data = line.strip().split(",")
+                    if len(data) != 7:
+                        print("Error: Invalid rental history entry format.")
+                        continue
+                    customer_name, car_model, car_year, rental_date, return_date, days, total_cost = data
+                    rental = Rental(
+                        customer=next((c for c in customers if c.name == customer_name), None),
+                        car=next((c for c in cars if c.model == car_model and c.year == int(car_year)), None),
+                        rental_date=datetime.datetime.strptime(rental_date, "%Y-%m-%d").date(),
+                        return_date=datetime.datetime.strptime(return_date, "%Y-%m-%d").date(),
+                        total_cost=float(total_cost.replace("Rs", ""))
+                    )
+                    print(rental)
+        except FileNotFoundError:
+            print("No rental history found.")
 
-def list_customers():
-    print()
-    print("Customers:")
-    for customer in customers:
-        print(customer)
+    def list_cars():
+        print()
+        print("Available Cars:")
+        for car in cars:
+            print(car)
+
+    def list_customers():
+        print()
+        print("Customers:")
+        for customer in customers:
+            print(customer)
 
 
 # Main function to run the program
 def main():
-    load_data()
+    CarRentalSystem.load_data()
     while True:
         print("\n--------Car Rental System--------")
         print("1. Add Car")
@@ -476,29 +473,29 @@ def main():
         choice = input("Enter your choice : ")
 
         if choice == "1":
-            add_car()
+            CarRentalSystem.add_car()
         elif choice == "2":
-            remove_car()
+            CarRentalSystem.remove_car()
         elif choice == "3":
-            list_cars()
+            CarRentalSystem.list_cars()
         elif choice == "4":
-            add_customer()
+            CarRentalSystem.add_customer()
         elif choice == "5":
-            remove_customer()
-        elif choice == "6":
-            list_customers()
+            CarRentalSystem.remove_customer()
+        elif choice == "6":            
+            CarRentalSystem.list_customers()
         elif choice == "7":
-            rent_car()
+            CarRentalSystem.rent_car()  
         elif choice == "8":
-            return_car()
+            CarRentalSystem.return_car()
         elif choice == "9":
-            view_rental_history()
+            CarRentalSystem.view_rental_history()
         elif choice == "10":
             print("Exiting...")
-            save_data()
+            CarRentalSystem.save_data()
             break
         else:
             print("Invalid choice, please try again.")
 
-
 main()
+
