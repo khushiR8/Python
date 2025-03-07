@@ -1,2 +1,0 @@
-C001,Honda jazz,2020,Grey,1500.0,False
-C002,Toyota Yaris,2022,white,1200.0,True
