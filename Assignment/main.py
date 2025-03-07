@@ -1,9 +1,9 @@
 import datetime
 
-# Global lists to store cars and customers
+# Global lists to store cars, customers, and rentals
 cars = []
 customers = []
-
+rentals = []
 
 class Vehicle:
     # Class variable to count the number of vehicles
@@ -146,6 +146,63 @@ class Customer(Person):
 
     def __str__(self):
         return f"ID: {self._customer_id} - {self._name} - {self._number} - {'Rented: ' + str(self._rented_car) if self._rented_car else 'No Car'}"
+
+
+class Rental:
+    def __init__(self, customer, car, rental_date, return_date, total_cost):
+        self._customer = customer
+        self._car = car
+        self._rental_date = rental_date
+        self._return_date = return_date
+        self._total_cost = total_cost
+
+    # Getter and Setter for customer
+    @property
+    def customer(self):
+        return self._customer
+
+    @customer.setter
+    def customer(self, customer):
+        self._customer = customer
+
+    # Getter and Setter for car
+    @property
+    def car(self):
+        return self._car
+
+    @car.setter
+    def car(self, car):
+        self._car = car
+
+    # Getter and Setter for rental_date
+    @property
+    def rental_date(self):
+        return self._rental_date
+
+    @rental_date.setter
+    def rental_date(self, rental_date):
+        self._rental_date = rental_date
+
+    # Getter and Setter for return_date
+    @property
+    def return_date(self):
+        return self._return_date
+
+    @return_date.setter
+    def return_date(self, return_date):
+        self._return_date = return_date
+
+    # Getter and Setter for total_cost
+    @property
+    def total_cost(self):
+        return self._total_cost
+
+    @total_cost.setter
+    def total_cost(self, total_cost):
+        self._total_cost = total_cost
+
+    def __str__(self):
+        return f"{self._customer.name} rented {self._car.model} on {self._rental_date.strftime('%d/%m/%Y')} and returned on {self._return_date.strftime('%d/%m/%Y')}. Total Cost: Rs{self._total_cost}"
 
 
 # Helper functions for file operations
@@ -319,15 +376,16 @@ def rent_car():
 
                 car.is_rented = True
                 customer.rented_car = car
+
+                # Save to rental history file
+                with open("rental_history.txt", "a") as f:
+                    f.write(f"{customer.name},{car.model},{car.year},{rental_date},{return_date},{days},Rs{total_cost}\n")
+
                 print()
                 print(f"{customer.name} has rented {car.model} for {days} days.")
                 print(f"Total cost: Rs{total_cost}")
                 print(f"Rental Date: {rental_date.strftime('%d/%m/%Y')}")
                 print(f"Expected Return Date: {return_date.strftime('%d/%m/%Y')}")
-
-                # Save to rental history file
-                with open("rental_history.txt", "a") as f:
-                    f.write(f"{customer.name},{car.model},{car.year},{rental_date},{return_date},{days},Rs{total_cost}\n")
             else:
                 print("Customer not found. Please add the customer first.")
         else:
@@ -354,6 +412,7 @@ def return_car():
         print(f"{customer.name} has returned {car.model}.")
         customer.rented_car = None
 
+        # Update the rental history with the return date
         with open("rental_history.txt", "r") as f:
             lines = f.readlines()
         with open("rental_history.txt", "w") as f:
@@ -371,7 +430,15 @@ def view_rental_history():
         with open("rental_history.txt", "r") as f:
             print("Rental History:")
             for line in f:
-                print(line.strip())
+                customer_name, car_model, car_year, rental_date, return_date, days, total_cost = line.strip().split(",")
+                rental = Rental(
+                    customer=next((c for c in customers if c.name == customer_name), None),
+                    car=next((c for c in cars if c.model == car_model and c.year == int(car_year)), None),
+                    rental_date=datetime.datetime.strptime(rental_date, "%Y-%m-%d").date(),
+                    return_date=datetime.datetime.strptime(return_date, "%Y-%m-%d").date(),
+                    total_cost=float(total_cost.replace("Rs", ""))
+                )
+                print(rental)
     except FileNotFoundError:
         print("No rental history found.")
 
