@@ -178,6 +178,7 @@ def save_data():
 
 # Helper functions for car and customer management
 def add_car():
+    print()
     car_id = input("Enter car ID: ").strip()
     # Validate car ID format (e.g., C followed by 3 digits)
     if not (len(car_id) == 4 and car_id[0] == "C" and car_id[1:].isdigit()):
@@ -219,6 +220,7 @@ def add_car():
         print(f"Error: {e}")
 
 def remove_car():
+    print()
     list_cars()
     car_id = input("Enter the car ID of the car to remove : ").strip()
 
@@ -236,6 +238,7 @@ def remove_car():
 
 
 def add_customer():
+    print()
     customer_id = input("Enter customer ID : ").strip()
     # Validate customer ID format (e.g., C followed by 3 digits)
     if not (len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit()):
@@ -263,6 +266,7 @@ def add_customer():
 
 
 def remove_customer():
+    print()
     list_customers()
     customer_id = input("Enter the customer ID of the customer to remove : ").strip()
 
@@ -280,8 +284,9 @@ def remove_customer():
 
 
 def rent_car():
+    print()
     list_cars()
-    print("****************************************************")
+    print("----------------------------------------------------------------------")
     list_customers()
     car_id = input("Enter the car ID of the car to rent : ").strip()
 
@@ -314,6 +319,7 @@ def rent_car():
 
                 car.is_rented = True
                 customer.rented_car = car
+                print()
                 print(f"{customer.name} has rented {car.model} for {days} days.")
                 print(f"Total cost: Rs{total_cost}")
                 print(f"Rental Date: {rental_date.strftime('%d/%m/%Y')}")
@@ -331,6 +337,7 @@ def rent_car():
 
 
 def return_car():
+    print()
     list_customers()
     customer_id = input("Enter your customer ID : ").strip()
 
@@ -370,12 +377,14 @@ def view_rental_history():
 
 
 def list_cars():
+    print()
     print("Available Cars:")
     for car in cars:
         print(car)
 
 
 def list_customers():
+    print()
     print("Customers:")
     for customer in customers:
         print(customer)
