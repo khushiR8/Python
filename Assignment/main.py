@@ -275,6 +275,12 @@ class CarRentalSystem:
 
     def remove_car():
         print()
+
+        # Check if the list of cars is empty
+        if not cars:
+            print("The list of cars is empty.")
+            return
+
         CarRentalSystem.list_cars()
 
         # Loop until the car ID is valid
@@ -294,7 +300,6 @@ class CarRentalSystem:
             print(f"Car {car.model} removed successfully!")
         else:
             print("Car not found.")
-
 
     def add_customer():
         print()
@@ -324,6 +329,12 @@ class CarRentalSystem:
 
     def remove_customer():
         print()
+
+        # Check if the list of customers is empty
+        if not customers:
+            print("The list of customers is empty.")
+            return
+
         CarRentalSystem.list_customers()
         print()
 
@@ -344,7 +355,6 @@ class CarRentalSystem:
             print(f"Customer {customer.name} removed successfully!")
         else:
             print("Customer not found.")
-
 
     def rent_car():
         print()
