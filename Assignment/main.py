@@ -276,19 +276,25 @@ class CarRentalSystem:
     def remove_car():
         print()
         CarRentalSystem.list_cars()
-        car_id = input("Enter the car ID of the car to remove : ").strip()
 
-        # Validate car ID format
-        if not (len(car_id) == 4 and car_id[0] == "V" and car_id[1:].isdigit()):
-            print("Error: Car ID must be in the format V followed by 3 digits (e.g., V001).")
-            return
+        # Loop until the car ID is valid
+        while True:
+            car_id = input("Enter the car ID of the car to remove : ").strip()
 
+            # Validate car ID format
+            if len(car_id) == 4 and car_id[0] == "V" and car_id[1:].isdigit():
+                break  # Exit loop if input is valid
+            else:
+                print("Error: Car ID must be in the format V followed by 3 digits (e.g., V001). Please try again.")
+
+        # Search for the car
         car = next((c for c in cars if c.car_id == car_id), None)
         if car:
             cars.remove(car)
             print(f"Car {car.model} removed successfully!")
         else:
             print("Car not found.")
+
 
     def add_customer():
         print()
@@ -319,13 +325,19 @@ class CarRentalSystem:
     def remove_customer():
         print()
         CarRentalSystem.list_customers()
-        customer_id = input("Enter the customer ID of the customer to remove : ").strip()
+        print()
 
-        # Validate customer ID format
-        if not (len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit()):
-            print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001).")
-            return
+        # Loop until the customer ID is valid
+        while True:
+            customer_id = input("Enter the customer ID of the customer to remove : ").strip()
 
+            # Validate customer ID format
+            if len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit():
+                break  # Exit loop if input is valid
+            else:
+                print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001). Please try again.")
+
+        # Search for the customer
         customer = next((c for c in customers if c.customer_id == customer_id), None)
         if customer:
             customers.remove(customer)
@@ -333,11 +345,13 @@ class CarRentalSystem:
         else:
             print("Customer not found.")
 
+
     def rent_car():
         print()
         CarRentalSystem.list_cars()
         print("----------------------------------------------------------------------")
         CarRentalSystem.list_customers()
+        print()
     
         while True:
             car_id = input("Enter the car ID of the car to rent : ").strip()
@@ -388,18 +402,21 @@ class CarRentalSystem:
         else:
             print("Car not found.")
     
-            
-
     def return_car():
         print()
         CarRentalSystem.list_customers()
-        customer_id = input("Enter your customer ID : ").strip()
 
-        # Validate customer ID format
-        if not (len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit()):
-            print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001).")
-            return
+        # Loop until the customer ID is valid
+        while True:
+            customer_id = input("Enter your customer ID : ").strip()
 
+            # Validate customer ID format
+            if len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit():
+                break  # Exit loop if input is valid
+            else:
+                print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001). Please try again.")
+
+        # Search for the customer
         customer = next((c for c in customers if c.customer_id == customer_id), None)
         if customer and customer.rented_car:
             car = customer.rented_car
@@ -408,42 +425,32 @@ class CarRentalSystem:
             print(f"{customer.name} has returned {car.model}.")
             customer.rented_car = None
 
-            # Update the rental history with the return date
+        # Update the rental history with the return date
             with open("rental_history.txt", "r") as f:
                 lines = f.readlines()
             with open("rental_history.txt", "w") as f:
                 for line in lines:
                     if f"{customer.name},{car.model},{car.year},-" in line:
-                        f.write(line.replace("-,", f"{return_date},"))
+                            f.write(line.replace("-,", f"{return_date},"))  # Update return date
                     else:
                         f.write(line)
         else:
             print("No car to return or customer not found.")
 
     def view_rental_history():
+        print()
         try:
             with open("rental_history.txt", "r") as f:
                 print("Rental History:")
                 for line in f:
-                    data = line.strip().split(",")
-                    if len(data) != 7:
-                        print("Error: Invalid rental history entry format.")
-                        continue
-                    customer_name, car_model, car_year, rental_date, return_date, days, total_cost = data
-                    rental = Rental(
-                        customer=next((c for c in customers if c.name == customer_name), None),
-                        car=next((c for c in cars if c.model == car_model and c.year == int(car_year)), None),
-                        rental_date=datetime.datetime.strptime(rental_date, "%Y-%m-%d").date(),
-                        return_date=datetime.datetime.strptime(return_date, "%Y-%m-%d").date(),
-                        total_cost=float(total_cost.replace("Rs", ""))
-                    )
-                    print(rental)
+                    print(line.strip())
         except FileNotFoundError:
             print("No rental history found.")
 
     def list_cars():
         print()
         print("Available Cars:")
+        print()
         for car in cars:
             print(car)
 
