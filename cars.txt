@@ -1,0 +1,5 @@
+V001,Honda jazz,2019,Grey,1500.0,False
+V002,Toyota yaris,2020,White,1300.0,False
+V003,Suzuki swift,2022,Red,1700.0,True
+V004,BMW M5,2025,Black,10000.0,False
+V005,Audi A5,2024,Blue,4000.0,True

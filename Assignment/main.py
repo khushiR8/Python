@@ -17,11 +17,6 @@ class Vehicle:
         self._is_rented = is_rented
         Vehicle.vehicle_count += 1  # Increment vehicle count
 
-    # Destructor to clean up resources
-    def __del__(self):
-        Vehicle.vehicle_count -= 1  # Decrement vehicle count
-        print(f"A vehicle ({self._model}) has been deleted.")
-
     # Getter and Setter for model
     @property
     def model(self):
