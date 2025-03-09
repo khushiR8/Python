@@ -1,5 +1,0 @@
-Khushi Beedassy,12345678,C001
-John Doe,23456789,C002
-Tom Smith,34567891,C003
-Jerry Johnson,45678912,C004
-Keshia Soobrayen,98765432,C005
