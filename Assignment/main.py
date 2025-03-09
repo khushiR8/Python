@@ -449,7 +449,25 @@ class CarRentalSystem:
             with open("customers.txt", "r") as f:
                 for line in f:
                     name, number, customer_id = line.strip().split(",")
-                    customers.append(Customer(name, number, customer_id))
+
+                    rentals = []
+                    with open("rental_history.txt", "r") as rental_file:
+                        for rental in rental_file:
+                            rentals.append(rental)
+
+                        filtered = []
+                        seen_names = set()
+
+                        for rental in reversed(rentals):
+                            customer_name = rental.split(',')[0]
+                            car_name = rental.split(',')[1]
+
+                            if customer_name not in seen_names:
+                                filtered.append(line)
+                                seen_names.add(customer_name)
+
+                                if customer_name == name:
+                                    customers.append(Customer(name, number, customer_id, car_name))
         except FileNotFoundError:
             pass
            
