@@ -1,0 +1,2 @@
+V001,Honda,2020,white,1500.0,False
+V002,Toyota,2022,white,2000.0,False

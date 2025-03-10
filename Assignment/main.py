@@ -155,6 +155,7 @@ class Car(Vehicle):
     def list_cars():
         print()
         print("Available Cars:")
+        print()
         for car in cars:
             print(car)
     
@@ -389,40 +390,57 @@ class Rental:
 
     def return_car():
         print()
-        Customer.list_customers()
-        print()
 
+        found = False 
+        for c in customers:
+            if c.rented_car != None:
+                found = True 
+                break
+
+        if not found:
+            print("No cars are rented")
+            return
+
+        Customer.list_customers()
+
+        # Loop until the customer ID is valid
         while True:
             customer_id = input("Enter your customer ID : ").strip()
+
+            # Validate customer ID format
             if len(customer_id) == 4 and customer_id[0] == "C" and customer_id[1:].isdigit():
-                break
+                break  # Exit loop if input is valid
             else:
                 print("Error: Customer ID must be in the format C followed by 3 digits (e.g., C001). Please try again.")
 
+        # Search for the customer
         customer = next((c for c in customers if c.customer_id == customer_id), None)
-    
         if customer and customer.rented_car:
-            # Find the actual car object, not just its name
-            car = next((c for c in cars if c.model == customer.rented_car), None)
-        
-            if car:
-                car.is_rented = False  # Now `car` is a Car object
-                print(f"{customer.name} has returned {car.model}.")
-                customer.rented_car = None
+            car_model = customer.rented_car
 
-                with open("rental_history.txt", "r") as f:
-                    lines = f.readlines()
-                with open("rental_history.txt", "w") as f:
-                    for line in lines:
-                        if f"{customer.name},{car.model}," in line:
-                            f.write(line.replace("-,", f"{datetime.date.today()},"))  
-                        else:
-                            f.write(line)
-            else:
-                print("Error: Car not found in the system.")
+            car_year = 0
+            for car in cars:
+                if car.model == car_model:
+                    car.is_rented = False
+                    car_year = car.year
+                    break
+
+            return_date = datetime.date.today()
+            customer.rented_car = None
+            print(f"{customer.name} has returned {car.model}.")
+
+
+            # Update the rental history with the return date
+            with open("rental_history.txt", "r") as f:
+                lines = f.readlines()
+            with open("rental_history.txt", "w") as f:
+                for line in lines:
+                    if f"{customer.name},{car_model},{car_year}," in line:
+                        f.write(line.replace(customer.name, "[Already Returned] " + customer.name))
+                    else:
+                        f.write(line)
         else:
             print("No car to return or customer not found.")
-
     
     def view_rental_history():
         print()
@@ -437,37 +455,34 @@ class Rental:
 class CarRentalSystem:
     def load_data():
         global cars, customers
-    try:
-        with open("cars.txt", "r") as f:
-            for line in f:
-                car_id, model, year, color, daily_rate, rented = line.strip().split(",")
-                cars.append(Car(car_id, model, int(year), color, float(daily_rate), rented == "True"))
-    except FileNotFoundError:
-        pass
-        # print("Error: cars.txt file not found.")
+        try:
+            with open("cars.txt", "r") as f:
+                for line in f:
+                    car_id, model, year, color, daily_rate, rented = line.strip().split(",")
+                    cars.append(Car(car_id, model, int(year), color, float(daily_rate), rented == "True"))
+        except FileNotFoundError:
+            pass
+            #print("Error: cars.txt file not found.")
+        
+        try:
+            with open("customers.txt", "r") as f:
+                for line in f:
+                    name, number, customer_id = line.strip().split(",")
+                    customers.append(Customer(name, number, customer_id))
+        except FileNotFoundError:
+            pass
 
-    try:
-        with open("customers.txt", "r") as f:
-            for line in f:
-                name, number, customer_id = line.strip().split(",")
+        try:
+            with open("rental_history.txt", "r") as f:
+                for line in f:
+                    customer_name = line.split(',')[0]
+                    car_name = line.split(',')[1]
 
-                # Default car_name as "No Rental" if no rental found
-                car_name = "No Cars"
-
-                try:
-                    with open("rental_history.txt", "r") as rental_file:
-                        for rental in rental_file:
-                            rental_data = rental.strip().split(',')
-                            if rental_data[0] == name:
-                                car_name = rental_data[1]  # Assign last rented car
-                except FileNotFoundError:
-                    pass  # No rental history file, assume no rentals
-
-                # Add the customer to the list regardless of rental status
-                customers.append(Customer(name, number, customer_id, car_name))
-    except FileNotFoundError:
-        pass
-
+                    for customer in customers:
+                        if customer.name == customer_name:
+                            customer.rented_car = car_name
+        except FileNotFoundError:
+            pass
            
     def save_data():
         with open("cars.txt", "w") as f:

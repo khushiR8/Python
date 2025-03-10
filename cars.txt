@@ -1,1 +1,0 @@
-V001,Honda,2020,white,1500.0,True
