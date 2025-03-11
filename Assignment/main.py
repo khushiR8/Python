@@ -8,7 +8,7 @@ rentals = []
 class Vehicle:
     # Class variable to count the number of vehicles
     vehicle_count = 0
-
+    
     def __init__(self, model, year, color, daily_rate, is_rented=False):
         self._model = model
         self._year = year
@@ -424,7 +424,7 @@ class Rental:
                     car.is_rented = False
                     car_year = car.year
                     break
-
+                
             return_date = datetime.date.today()
             customer.rented_car = None
             print(f"{customer.name} has returned {car.model}.")

@@ -1,2 +1,5 @@
-V001,Honda,2020,white,1500.0,False
-V002,Toyota,2022,white,2000.0,False
+V001,Honda Jazz,2020,Grey,1500.0,False
+V002,Toyota Yaris,2019,White,1300.0,False
+V003,Suzuki Swift,2023,Black,1800.0,False
+V004,BMW M5,2025,Red,10000.0,False
+V005,Audi A5,2025,Red,8000.0,False
