@@ -1,6 +1,1 @@
-[Already Returned] Joe,Honda,2020,2025-03-10,2025-03-12,2,Rs3000.0
-[Already Returned] [Already Returned] John Doe,Honda Jazz,2020,2025-03-10,2025-03-12,2,Rs3000.0
-[Already Returned] Khushi Bee,Audi A5,2015,2025-03-10,2025-03-14,4,Rs12000.0
-[Already Returned] John Doe,Honda Jazz,2020,2025-03-11,2025-03-14,3,Rs4500.0
-[Already Returned] Tom Smith,Toyota Yaris,2019,2025-03-11,2025-03-16,5,Rs6500.0
-[Already Returned] Jerry Johnson,Honda Jazz,2020,2025-03-11,2025-03-14,3,Rs4500.0
+John doe,Audi A5,2018,2025-03-14,2025-03-19,5,Rs20000.0
