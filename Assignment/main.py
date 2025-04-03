@@ -475,8 +475,8 @@ class CarRentalSystem:
         try:
             with open("rental_history.txt", "r") as f:
                 for line in f:
-                    customer_name = line.split(',')[0]
-                    car_name = line.split(',')[1]
+                    customer_name = line.split(',')[0] #extracts the first customer name
+                    car_name = line.split(',')[1] #extracts the car name
 
                     for customer in customers:
                         if customer.name == customer_name:
