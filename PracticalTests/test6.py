@@ -20,3 +20,5 @@ if barcode in stockDictionary: #search for item
     stockDictionary.get(barcode).display() #if found, calls the .display() method 
 else:
     print("Not Found")
+    
+    
