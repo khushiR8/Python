@@ -47,5 +47,7 @@ def main():
     highincome=worker.filter_high_income_staff(list,threshold)
     for i in highincome:
         print(f'{i.n} Annual income : {Staff.calculate_annual_income(i.s)}')
+
+    print(f'Current number of items : {Staff.total_staff}')
 main()    
     
