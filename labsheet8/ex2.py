@@ -1,5 +1,6 @@
 #open files
 
-a=open('square.txt','r')
-print(a.read())
-a.close()
+file=open('square.txt','r')
+y=file.read()
+print(y)
+file.close()

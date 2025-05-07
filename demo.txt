@@ -1,0 +1,4 @@
+Hello my name is khushi
+This is a python text
+This is a fun exercise
+BYe

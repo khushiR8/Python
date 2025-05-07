@@ -48,6 +48,6 @@ def main():
     for i in highincome:
         print(f'{i.n} Annual income : {Staff.calculate_annual_income(i.s)}')
 
-    print(f'Current number of items : {Staff.total_staff}')
+    print(f'Current number of staff : {Staff.total_staff}')
 main()    
     

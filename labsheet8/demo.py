@@ -7,10 +7,19 @@
 
 #f.close()
 
-a=open('trial.txt','x')
-a=open('trial.txt','a')
-a.write("hello")
-a=open('trial.txt','r')
-print(a.read())
+file=open('demo.txt','w')
+for i in range(4):
+    s=str(input('enter a sentence :'))
+    x=file.write(s + '\n')  #'\n' inputs on a new line
+    print(x)
+file.close()
 
-a.close()
+file=open('demo.txt','r')
+y=file.read()
+print(y)
+file.close()
+
+file=open('demo.txt','r')
+for line in file:
+    print('[' + line.strip() + ']')
+file.close()
