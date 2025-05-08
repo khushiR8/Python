@@ -17,7 +17,7 @@ def main():
         print("3. Query item by barcode")
         print("4. Exit")
         
-        c=int(input('enter choice [1-4]: '))
+        c=int(input('\nEnter choice [1-4]: '))
         if c==1:
             barcode=input('enter barcode number: ')
             if barcode in d:

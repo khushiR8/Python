@@ -21,3 +21,23 @@ file=open('square.txt','r')
 y=file.read()
 print(y)
 file.close()
+
+#using exceptions
+# try:
+#     file=open('square.txt','w')
+#     file.write('Number\tSquare\n')
+#     n=int(input('enter a number:'))
+#     try:
+#         while n!=0:
+#             square=n**2
+#             file.write(str(n)+'\t'+str(square+'\n'))
+#             n=int(input('enter a number:'))
+#     except ValueError:
+#         print('input a number')
+        
+#     file=open('square.txt','r')
+#     x=file.read()
+#     print(x)
+#     file.close()
+# except Exception as e:
+#     print(e)
